@@ -1,0 +1,41 @@
+*{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+}
+body{
+    background-image: url('../img/portal.jpg');
+    background-position: center;
+    background-size: cover;
+}
+img{
+    width: 75px;
+    height: 75px;
+}
+
+section{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom:20px;
+}
+section > input{
+    padding: 5px 10px;
+}
+
+/*Grid de imagenes para web terminado*/
+.contenedorGrupos{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+.grid > img{
+    padding: 20px;
+}

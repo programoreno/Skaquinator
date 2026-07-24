@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -17,5 +17,59 @@
     </section>
     <div id="contenedorGrupos" class="contenedorGrupos"></div>
 </body> 
+
+</html>
+-->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skaquinator | Adivina los Skylanders</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+
+    <div class="portal-glow"></div>
+
+    <header class="cabecera">
+        <p class="eyebrow">Portal de poder</p>
+        <h1>SKAQUINATOR</h1>
+        <p class="subtitulo">Escribe el nombre de un Skylander para revelarlo. ¿Los reconoces a todos?</p>
+
+        <div class="barra-busqueda">
+            <svg class="icono-lupa" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <input type="text" id="buscador" placeholder="Ej: Spyro, Bash, Zap..." autocomplete="off" spellcheck="false">
+        </div>
+
+        <div class="progreso-wrap">
+            <div class="progreso-info">
+                <span id="contador">0 / 0</span> revelados
+            </div>
+            <div class="progreso-barra">
+                <div class="progreso-relleno" id="progresoRelleno"></div>
+            </div>
+        </div>
+    </header>
+
+    <main id="contenedorGrupos" class="contenedorGrupos"></main>
+
+    <footer class="pie">
+        <button id="btnReiniciar" class="btn-reiniciar">Reiniciar progreso</button>
+    </footer>
+
+    <script src="js/functions.js"></script>
+</body>
 
 </html>

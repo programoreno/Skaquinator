@@ -1,4 +1,4 @@
-const grupos = [
+/*const grupos = [
   {
     elemento: "img/agua/agua.png",
     items: [
@@ -140,4 +140,237 @@ window.onload = function () {
     showConfirmButton: false
   });
   document.getElementById('buscador').addEventListener('input', buscar);
+};
+*/
+const grupos = [
+  {
+    elemento: "agua",
+    nombre: "Agua",
+    portada: "img/agua/agua.png",
+    items: [
+      { nombre: "Gill Grunt", imagen: "img/agua/Gill Grunt.png" },
+      { nombre: "Slam Bam", imagen: "img/agua/Slam Bam.png" },
+      { nombre: "Wham-Shell", imagen: "img/agua/Wham-Shell.png" },
+      { nombre: "Zap", imagen: "img/agua/Zap.png" }
+    ]
+  },
+  {
+    elemento: "aire",
+    nombre: "Aire",
+    portada: "img/aire/aire.png",
+    items: [
+      { nombre: "Lightning Rod", imagen: "img/aire/Lightning Rod.png" },
+      { nombre: "Sonic Boom", imagen: "img/aire/Sonic Boom.png" },
+      { nombre: "Warnado", imagen: "img/aire/Warnado.png" },
+      { nombre: "Whirlwind", imagen: "img/aire/Whirlwind.png" }
+    ]
+  },
+  {
+    elemento: "fuego",
+    nombre: "Fuego",
+    portada: "img/fuego/fuego.png",
+    items: [
+      { nombre: "Eruptor", imagen: "img/fuego/Eruptor.png" },
+      { nombre: "Flameslinger", imagen: "img/fuego/Flameslinger.png" },
+      { nombre: "Ignitor", imagen: "img/fuego/Ignitor.png" },
+      { nombre: "Sunburn", imagen: "img/fuego/Sunburn.png" }
+    ]
+  },
+  {
+    elemento: "magia",
+    nombre: "Magia",
+    portada: "img/magia/magia.png",
+    items: [
+      { nombre: "Spyro", imagen: "img/magia/Spyro.png" },
+      { nombre: "Voodood", imagen: "img/magia/Voodood.png" },
+      { nombre: "Wrecking Ball", imagen: "img/magia/Wrecking Ball.png" },
+      { nombre: "Double Trouble", imagen: "img/magia/Double Trouble.png" }
+    ]
+  },
+  {
+    elemento: "muertos",
+    nombre: "No Muertos",
+    portada: "img/muertos/muertos.png",
+    items: [
+      { nombre: "Chop Chop", imagen: "img/muertos/Chop Chop.png" },
+      { nombre: "Cynder", imagen: "img/muertos/Cynder.png" },
+      { nombre: "Ghost Roaster", imagen: "img/muertos/Ghost Roaster.png" },
+      { nombre: "Hex", imagen: "img/muertos/Hex.png" }
+    ]
+  },
+  {
+    elemento: "tecnologia",
+    nombre: "Tecnología",
+    portada: "img/tecnologia/tecnologia.png",
+    items: [
+      { nombre: "Boomer", imagen: "img/tecnologia/Boomer.png" },
+      { nombre: "Drill Sergeant", imagen: "img/tecnologia/Drill Sergeant.png" },
+      { nombre: "Drobot", imagen: "img/tecnologia/Drobot.png" },
+      { nombre: "Trigger Happy", imagen: "img/tecnologia/Trigger Happy.png" }
+    ]
+  },
+  {
+    elemento: "tierra",
+    nombre: "Tierra",
+    portada: "img/tierra/tierra.png",
+    items: [
+      { nombre: "Bash", imagen: "img/tierra/Bash.png" },
+      { nombre: "Dino-Rang", imagen: "img/tierra/Dino-Rang.png" },
+      { nombre: "Prism Break", imagen: "img/tierra/Prism Break.png" },
+      { nombre: "Terrafin", imagen: "img/tierra/Terrafin.png" }
+    ]
+  },
+  {
+    elemento: "vida",
+    nombre: "Vida",
+    portada: "img/vida/vida.png",
+    items: [
+      { nombre: "Camo", imagen: "img/vida/Camo.png" },
+      { nombre: "Stealth Elf", imagen: "img/vida/Stealth Elf.png" },
+      { nombre: "Stump Smash", imagen: "img/vida/Stump Smash.png" },
+      { nombre: "Zook", imagen: "img/vida/Zook.png" }
+    ]
+  }
+];
+
+const TOTAL_SKYLANDERS = grupos.reduce((acc, g) => acc + g.items.length, 0);
+let adivinados = [];
+
+function cargarGrupos() {
+  const contenedor = document.getElementById("contenedorGrupos");
+  contenedor.innerHTML = "";
+
+  grupos.forEach((grupo) => {
+    const grupoDiv = document.createElement("div");
+    grupoDiv.classList.add("grupo");
+    grupoDiv.dataset.elemento = grupo.elemento;
+
+    const titulo = document.createElement("h2");
+    titulo.classList.add("grupo-titulo");
+    titulo.textContent = grupo.nombre;
+    grupoDiv.appendChild(titulo);
+
+    const itemsDiv = document.createElement("div");
+    itemsDiv.classList.add("grupo-items");
+
+    grupo.items.forEach((item) => {
+      const casilla = document.createElement("div");
+      casilla.classList.add("casilla");
+      casilla.title = adivinados.includes(item.nombre) ? item.nombre : "???";
+
+      const img = document.createElement("img");
+      if (adivinados.includes(item.nombre)) {
+        img.src = item.imagen;
+        casilla.classList.add("revelada");
+      } else {
+        img.src = grupo.portada;
+      }
+      casilla.appendChild(img);
+      itemsDiv.appendChild(casilla);
+    });
+
+    grupoDiv.appendChild(itemsDiv);
+    contenedor.appendChild(grupoDiv);
+  });
+
+  actualizarProgreso();
+}
+
+function actualizarProgreso() {
+  document.getElementById("contador").textContent = `${adivinados.length} / ${TOTAL_SKYLANDERS}`;
+  const porcentaje = (adivinados.length / TOTAL_SKYLANDERS) * 100;
+  document.getElementById("progresoRelleno").style.width = `${porcentaje}%`;
+}
+
+function existePrefijoValido(input) {
+  if (!input) return true;
+  return grupos.some((grupo) =>
+    grupo.items.some(
+      (item) =>
+        !adivinados.includes(item.nombre) &&
+        item.nombre.toLowerCase().startsWith(input)
+    )
+  );
+}
+
+function buscar() {
+  const inputField = document.getElementById("buscador");
+  const input = inputField.value.trim().toLowerCase();
+  let acierto = false;
+
+  grupos.forEach((grupo) => {
+    grupo.items.forEach((item) => {
+      if (input === item.nombre.toLowerCase() && !adivinados.includes(item.nombre)) {
+        adivinados.push(item.nombre);
+        acierto = true;
+      }
+    });
+  });
+
+  inputField.classList.remove("acierto", "error");
+
+  if (acierto) {
+    inputField.value = "";
+    cargarGrupos();
+    inputField.classList.add("acierto");
+    setTimeout(() => inputField.classList.remove("acierto"), 500);
+  } else if (input.length >= 3 && !existePrefijoValido(input)) {
+    inputField.classList.add("error");
+    setTimeout(() => inputField.classList.remove("error"), 350);
+  }
+
+  if (adivinados.length === TOTAL_SKYLANDERS) {
+    setTimeout(() => {
+      Swal.fire({
+        title: "¡Portal completado!",
+        text: "Has adivinado a todos los Skylanders. ¡Buen ojo, Portal Master!",
+        icon: "success",
+        confirmButtonText: "Genial",
+        confirmButtonColor: "#d9b24c",
+        background: "#10182b",
+        color: "#f1f3fb"
+      });
+    }, 250);
+  }
+}
+
+function reiniciar() {
+  Swal.fire({
+    title: "¿Reiniciar el portal?",
+    text: "Perderás todo tu progreso actual.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Sí, reiniciar",
+    cancelButtonText: "Cancelar",
+    confirmButtonColor: "#ff5a36",
+    cancelButtonColor: "#3a4560",
+    background: "#10182b",
+    color: "#f1f3fb"
+  }).then((resultado) => {
+    if (resultado.isConfirmed) {
+      adivinados = [];
+      cargarGrupos();
+      document.getElementById("buscador").focus();
+    }
+  });
+}
+
+window.onload = function () {
+  cargarGrupos();
+
+  Swal.fire({
+    title: "Bienvenido al Portal",
+    text: "Escribe el nombre de cualquier Skylander para revelarlo. Este proyecto sigue en beta, ¡gracias por probarlo!",
+    icon: "info",
+    confirmButtonText: "Entendido",
+    confirmButtonColor: "#d9b24c",
+    background: "#10182b",
+    color: "#f1f3fb"
+  });
+
+  const buscador = document.getElementById("buscador");
+  buscador.addEventListener("input", buscar);
+  buscador.focus();
+
+  document.getElementById("btnReiniciar").addEventListener("click", reiniciar);
 };

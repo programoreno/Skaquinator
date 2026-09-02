@@ -79,6 +79,24 @@ body {
     padding-bottom: 60px;
 }
 
+/* Banner Superior Beta */
+.banner-beta {
+    height: 50px;
+    width: 100%;
+    background: linear-gradient(90deg, #d9b24c, #ff5a36, #b45cff);
+    color: #070a12;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    position: relative;
+    z-index: 10;
+}
 /* Portal glow ambiental detras de todo, imitando el resplandor del Portal de Poder */
 .portal-glow {
     position: fixed;

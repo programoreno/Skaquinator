@@ -357,17 +357,7 @@ function reiniciar() {
 
 window.onload = function () {
   cargarGrupos();
-
-  Swal.fire({
-    title: "Bienvenido al Portal",
-    text: "Escribe el nombre de cualquier Skylander para revelarlo. Este proyecto sigue en beta, ¡gracias por probarlo!",
-    icon: "info",
-    confirmButtonText: "Entendido",
-    confirmButtonColor: "#d9b24c",
-    background: "#10182b",
-    color: "#f1f3fb"
-  });
-
+  
   const buscador = document.getElementById("buscador");
   buscador.addEventListener("input", buscar);
   buscador.focus();

@@ -81,12 +81,12 @@ body {
 
 /* Banner Superior Beta */
 .banner-beta {
-    height: 50px;
+    height: 30px;
     width: 100%;
     background: linear-gradient(90deg, #d9b24c, #ff5a36, #b45cff);
     color: #070a12;
     font-weight: 700;
-    font-size: 14px;
+    font-size: 12px;
     letter-spacing: 0.05em;
     display: flex;
     align-items: center;

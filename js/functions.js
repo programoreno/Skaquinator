@@ -189,7 +189,7 @@ const grupos = [
   },
   {
     elemento: "muertos",
-    nombre: "No Muertos",
+    nombre: "Muertos",
     portada: "img/muertos/muertos.png",
     items: [
       { nombre: "Chop Chop", imagen: "img/muertos/Chop Chop.png" },

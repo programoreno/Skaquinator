@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="ccs/style.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
@@ -22,7 +22,6 @@
     <div class="portal-glow"></div>
 
     <header class="cabecera">
-        <p class="eyebrow">Portal de poder</p>
         <h1>SKAQUINATOR</h1>
         <p class="subtitulo">Escribe el nombre de un Skylander para revelarlo. ¿Los reconoces a todos?</p>
 
@@ -34,12 +33,12 @@
                 </svg>
                 <input type="text" id="buscador" placeholder="Ej: Spyro, Bash, Zap..." autocomplete="off" spellcheck="false">
             </div>
-            <button id="btnReiniciar" class="btn-reiniciar" title="Reiniciar progreso">🔄</button>
+            <button id="btnReiniciar" class="btn-reiniciar" title="Reiniciar progreso"><ion-icon name="reload"></ion-icon></button>
         </div>
 
         <div class="progreso-wrap">
             <div class="progreso-info">
-                <span id="contador">0 / 0</span> revelados
+                <span id="contador">0 / 0</span>
             </div>
             <div class="progreso-barra">
                 <div class="progreso-relleno" id="progresoRelleno"></div>
@@ -84,7 +83,9 @@
         </div>
     </footer>
 
-    <script src="js/functions.js"></script>
+    <script src="js/function.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.js"></script>
 </body>
 
 </html>

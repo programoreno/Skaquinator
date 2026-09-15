@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'SKFont';
+    src: url('../pincoyablack.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 :root {
     --bg-1: #070a12;
     --bg-2: #10182b;
@@ -91,14 +98,11 @@ body {
 
 .cabecera h1 {
     margin: 0;
-    font-family: 'Cinzel', serif;
+    font-family: 'SKFont', serif;
     font-weight: 900;
-    font-size: clamp(2.4rem, 6vw, 4rem);
+    font-size: clamp(2.4rem, 6vw, 6rem);
     letter-spacing: 0.08em;
-    background: linear-gradient(180deg, #fff5d8 0%, var(--gold) 55%, #8a6a1e 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: #fff;
     text-shadow: 0 0 40px rgba(217, 178, 76, 0.35);
 }
 

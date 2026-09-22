@@ -230,6 +230,18 @@ const grupos = [
       { nombre: "Stump Smash", imagen: "img/vida/Stump Smash.png" },
       { nombre: "Zook", imagen: "img/vida/Zook.png" }
     ]
+  },
+  {
+    elemento: "Ediciones",
+    nombre: "Ediciones",
+    portada: "img/vida/vida.png",
+    items: [
+      { nombre: "Dark Spyro", imagen: "img/magia/Spyro.png" },
+      { nombre: "Legendary Spyro", imagen: "img/magia/Spyro.png" },
+      { nombre: "Legendary Bash", imagen: "img/tierra/Bash.png" },
+      { nombre: "Legendary Chop Chop", imagen: "img/muertos/Chop Chop.png" },
+      { nombre: "Legendary Trigger Happy", imagen: "img/tecnologia/Trigger Happy.png" }
+    ]
   }
 ];
 

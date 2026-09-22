@@ -263,7 +263,11 @@ function cargarGrupos() {
     grupoDiv.appendChild(titulo);
 
     const itemsDiv = document.createElement("div");
-    itemsDiv.classList.add("grupo-items");
+    if (grupo.elemento === "Ediciones") {
+      itemsDiv.classList.add("grupo-items-especial");
+    }else{
+      itemsDiv.classList.add("grupo-items");
+    }
 
     grupo.items.forEach((item) => {
       const casilla = document.createElement("div");

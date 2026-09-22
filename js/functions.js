@@ -234,13 +234,13 @@ const grupos = [
   {
     elemento: "Ediciones",
     nombre: "Ediciones",
-    portada: "img/vida/vida.png",
+    portada: "img/especiales/NoElemental.webp",
     items: [
-      { nombre: "Dark Spyro", imagen: "img/magia/Spyro.png" },
-      { nombre: "Legendary Spyro", imagen: "img/magia/Spyro.png" },
-      { nombre: "Legendary Bash", imagen: "img/tierra/Bash.png" },
-      { nombre: "Legendary Chop Chop", imagen: "img/muertos/Chop Chop.png" },
-      { nombre: "Legendary Trigger Happy", imagen: "img/tecnologia/Trigger Happy.png" }
+      { nombre: "Dark Spyro", imagen: "img/especiales/Dark Spyro.png" },
+      { nombre: "Legendary Spyro", imagen: "img/especiales/Legendary Spyro.png" },
+      { nombre: "Legendary Bash", imagen: "img/especiales/Legendary Bash.png" },
+      { nombre: "Legendary Chop Chop", imagen: "img/especiales/Legendary Chop Chop.png" },
+      { nombre: "Legendary Trigger Happy", imagen: "img/especiales/Legendary Trigger Happy.png" }
     ]
   }
 ];

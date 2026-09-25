@@ -1,252 +1,189 @@
-/*const grupos = [
-  {
-    elemento: "img/agua/agua.png",
-    items: [
-      { nombre: "Gill Grunt", imagen: "img/agua/Gill Grunt.png" },
-      { nombre: "Slam Bam", imagen: "img/agua/Slam Bam.png" },
-      { nombre: "Wham-Shell", imagen: "img/agua/Wham-Shell.png" },
-      { nombre: "Zap", imagen: "img/agua/Zap.png" }
-    ]
-  },
-  {
-    elemento: "img/aire/aire.png",
-    items: [
-      { nombre: "Lightning Rod", imagen: "img/aire/Lightning Rod.png" },
-      { nombre: "Sonic Boom", imagen: "img/aire/Sonic Boom.png" },
-      { nombre: "Warnado", imagen: "img/aire/Warnado.png" },
-      { nombre: "Whirlwind", imagen: "img/aire/Whirlwind.png" }
-    ]
-  },
-  {
-    elemento: "img/fuego/fuego.png",
-    items: [
-      { nombre: "Eruptor", imagen: "img/fuego/Eruptor.png" },
-      { nombre: "Flameslinger", imagen: "img/fuego/Flameslinger.png" },
-      { nombre: "Ignitor", imagen: "img/fuego/Ignitor.png" },
-      { nombre: "Sunburn", imagen: "img/fuego/Sunburn.png" }
-    ]
-  },
-  {
-    elemento: "img/magia/magia.png",
-    items: [
-      { nombre: "Spyro", imagen: "img/magia/Spyro.png" },
-      { nombre: "Voodood", imagen: "img/magia/Voodood.png" },
-      { nombre: "Wrecking Ball", imagen: "img/magia/Wrecking Ball.png" },
-      { nombre: "Double Trouble", imagen: "img/magia/Double Trouble.png" }
-    ]
-  },
-  {
-    elemento: "img/muertos/muertos.png",
-    items: [
-      { nombre: "Chop Chop", imagen: "img/muertos/Chop Chop.png" },
-      { nombre: "Cynder", imagen: "img/muertos/Cynder.png" },
-      { nombre: "Ghost Roaster", imagen: "img/muertos/Ghost Roaster.png" },
-      { nombre: "Hex", imagen: "img/muertos/Hex.png" }
-    ]
-  },
-  {
-    elemento: "img/tecnologia/tecnologia.png",
-    items: [
-      { nombre: "Boomer", imagen: "img/tecnologia/Boomer.png" },
-      { nombre: "Drill Sergeant", imagen: "img/tecnologia/Drill Sergeant.png" },
-      { nombre: "Drobot", imagen: "img/tecnologia/Drobot.png" },
-      { nombre: "Trigger Happy", imagen: "img/tecnologia/Trigger Happy.png" }
-    ]
-  },
-  {
-    elemento: "img/tierra/tierra.png",
-    items: [
-      { nombre: "Bash", imagen: "img/tierra/Bash.png" },
-      { nombre: "Dino-Rang", imagen: "img/tierra/Dino-Rang.png" },
-      { nombre: "Prism Break", imagen: "img/tierra/Prism Break.png" },
-      { nombre: "Terrafin", imagen: "img/tierra/Terrafin.png" }
-    ]
-  },
-  {
-    elemento: "img/vida/vida.png",
-    items: [
-      { nombre: "Camo", imagen: "img/vida/Camo.png" },
-      { nombre: "Stealth Elf", imagen: "img/vida/Stealth Elf.png" },
-      { nombre: "Stump Smash", imagen: "img/vida/Stump Smash.png" },
-      { nombre: "Zook", imagen: "img/vida/Zook.png" }
-    ]
-  }
-];
+/* =========================================================
+   SKAQUINATOR - Conexión con Supabase
+   =========================================================
+   La tabla "personaje" tiene (entre otras) estas columnas:
+     id       -> varchar, es el nombre del archivo de imagen (ej: "SW1")
+     nombre   -> varchar, nombre del Skylander
+     saga     -> int4, FK a la tabla "saga" (id, nombre)
+     elemento -> int4, FK a la tabla "elemento" (id, nombre)
+     edicion  -> int4, FK a la tabla "edicion" (id, nombre) o NULL
+     serie    -> int4, número de serie/reedición (1, 2, 3...)
 
-const adivinados = [];
+   Regla para "ediciones especiales":
+   Se asume que un personaje es una edición especial (Legendary,
+   Dark, etc.) cuando su columna "edicion" tiene un valor asignado.
+   Los personajes "normales" tienen edicion = NULL.
+   Si en tu base de datos es al revés, solo hay que tocar la función
+   esEdicionEspecial() de aquí abajo.
 
-function cargarGrupos() {
-  const contenedor = document.getElementById("contenedorGrupos");
-  contenedor.innerHTML = "";
+   Estructura visual:
+   Saga (tarjeta grande) -> Elemento (sub-grupo) -> Personajes (casillas)
+   ========================================================= */
 
-  grupos.forEach((grupo, grupoIndex) => {
-    const grid = document.createElement("div");
-    grid.classList.add("grid");
+const SUPABASE_URL = "https://wtcdmpgembpkdaigmzmc.supabase.co";
+const SUPABASE_KEY = "sb_publishable_iMxNU9BPOvqNM8fe_z4KlA_kkIz0PST";
 
-    grupo.items.forEach((item) => {
-      const img = document.createElement("img");
-      if (adivinados.includes(item.nombre)) {
-        img.src = item.imagen;
-      } else {
-        img.src = grupo.elemento;
-      }
-      grid.appendChild(img);
-    });
+// Carpeta donde deben estar las imágenes, nombradas como <id>.png (ej: SW1.png)
+const RUTA_IMAGENES = "img/personajes/";
 
-    contenedor.appendChild(grid);
-  });
+function esEdicionEspecial(personaje) {
+  return personaje.edicion !== null && personaje.edicion !== undefined;
 }
 
-function buscar() {
-  const inputField = document.getElementById('buscador');
-  const input = inputField.value.trim().toLowerCase();
-  let acierto = false;
+let grupos = [];           // [{ id, nombre, items: [...], elementos: [{ id, nombre, items: [...] }] }]
+let adivinados = new Set(); // ids de personajes adivinados (cada fila cuenta por separado)
+let TOTAL_SKYLANDERS = 0;
 
-  grupos.forEach((grupo) => {
-    grupo.items.forEach((item) => {
-      if (input === item.nombre.toLowerCase() && !adivinados.includes(item.nombre)) {
-        adivinados.push(item.nombre);
-        acierto = true;
-      }
-    });
-  });
+/* ---------- Colores por elemento ---------- */
 
-  if (acierto) {
-    inputField.value = ''; // Solo borra el input si acertó
-    console.log("Acierto");
-    cargarGrupos();
-  }
-
-  const total = grupos.reduce((acc, grupo) => acc + grupo.items.length, 0);
-  if (adivinados.length === total) {
-    Swal.fire({
-      title: "Felicitaciones!",
-      text: "Has adivinado todos",
-      icon: "success",
-      showCloseButton: true,
-    showConfirmButton: false
-    });
-  }
-}
-
-
-window.onload = function () {
-  cargarGrupos();
-  Swal.fire({
-    title: "Information",
-    text: "This is a beta we still working at the proyect, thanks",
-    icon: "info",
-    showCloseButton: true,
-    showConfirmButton: false
-  });
-  document.getElementById('buscador').addEventListener('input', buscar);
+const ELEMENTOS_COLOR = {
+  agua: "var(--c-agua)",
+  aire: "var(--c-aire)",
+  fuego: "var(--c-fuego)",
+  magia: "var(--c-magia)",
+  muertos: "var(--c-muertos)",
+  tecnologia: "var(--c-tecnologia)",
+  tierra: "var(--c-tierra)",
+  vida: "var(--c-vida)"
 };
-*/
-const grupos = [
-  {
-    elemento: "agua",
-    nombre: "Agua",
-    portada: "img/agua/agua.png",
-    items: [
-      { nombre: "Gill Grunt", imagen: "img/agua/Gill Grunt.png" },
-      { nombre: "Slam Bam", imagen: "img/agua/Slam Bam.png" },
-      { nombre: "Wham-Shell", imagen: "img/agua/Wham-Shell.png" },
-      { nombre: "Zap", imagen: "img/agua/Zap.png" }
-    ]
-  },
-  {
-    elemento: "aire",
-    nombre: "Aire",
-    portada: "img/aire/aire.png",
-    items: [
-      { nombre: "Lightning Rod", imagen: "img/aire/Lightning Rod.png" },
-      { nombre: "Sonic Boom", imagen: "img/aire/Sonic Boom.png" },
-      { nombre: "Warnado", imagen: "img/aire/Warnado.png" },
-      { nombre: "Whirlwind", imagen: "img/aire/Whirlwind.png" }
-    ]
-  },
-  {
-    elemento: "fuego",
-    nombre: "Fuego",
-    portada: "img/fuego/fuego.png",
-    items: [
-      { nombre: "Eruptor", imagen: "img/fuego/Eruptor.png" },
-      { nombre: "Flameslinger", imagen: "img/fuego/Flameslinger.png" },
-      { nombre: "Ignitor", imagen: "img/fuego/Ignitor.png" },
-      { nombre: "Sunburn", imagen: "img/fuego/Sunburn.png" }
-    ]
-  },
-  {
-    elemento: "magia",
-    nombre: "Magia",
-    portada: "img/magia/magia.png",
-    items: [
-      { nombre: "Spyro", imagen: "img/magia/Spyro.png" },
-      { nombre: "Voodood", imagen: "img/magia/Voodood.png" },
-      { nombre: "Wrecking Ball", imagen: "img/magia/Wrecking Ball.png" },
-      { nombre: "Double Trouble", imagen: "img/magia/Double Trouble.png" }
-    ]
-  },
-  {
-    elemento: "muertos",
-    nombre: "Muertos",
-    portada: "img/muertos/muertos.png",
-    items: [
-      { nombre: "Chop Chop", imagen: "img/muertos/Chop Chop.png" },
-      { nombre: "Cynder", imagen: "img/muertos/Cynder.png" },
-      { nombre: "Ghost Roaster", imagen: "img/muertos/Ghost Roaster.png" },
-      { nombre: "Hex", imagen: "img/muertos/Hex.png" }
-    ]
-  },
-  {
-    elemento: "tecnologia",
-    nombre: "Tecnología",
-    portada: "img/tecnologia/tecnologia.png",
-    items: [
-      { nombre: "Boomer", imagen: "img/tecnologia/Boomer.png" },
-      { nombre: "Drill Sergeant", imagen: "img/tecnologia/Drill Sergeant.png" },
-      { nombre: "Drobot", imagen: "img/tecnologia/Drobot.png" },
-      { nombre: "Trigger Happy", imagen: "img/tecnologia/Trigger Happy.png" }
-    ]
-  },
-  {
-    elemento: "tierra",
-    nombre: "Tierra",
-    portada: "img/tierra/tierra.png",
-    items: [
-      { nombre: "Bash", imagen: "img/tierra/Bash.png" },
-      { nombre: "Dino-Rang", imagen: "img/tierra/Dino-Rang.png" },
-      { nombre: "Prism Break", imagen: "img/tierra/Prism Break.png" },
-      { nombre: "Terrafin", imagen: "img/tierra/Terrafin.png" }
-    ]
-  },
-  {
-    elemento: "vida",
-    nombre: "Vida",
-    portada: "img/vida/vida.png",
-    items: [
-      { nombre: "Camo", imagen: "img/vida/Camo.png" },
-      { nombre: "Stealth Elf", imagen: "img/vida/Stealth Elf.png" },
-      { nombre: "Stump Smash", imagen: "img/vida/Stump Smash.png" },
-      { nombre: "Zook", imagen: "img/vida/Zook.png" }
-    ]
-  },
-  {
-    elemento: "Ediciones",
-    nombre: "Ediciones",
-    portada: "img/especiales/NoElemental.webp",
-    items: [
-      { nombre: "Dark Spyro", imagen: "img/especiales/Dark Spyro.png" },
-      { nombre: "Legendary Spyro", imagen: "img/especiales/Legendary Spyro.png" },
-      { nombre: "Legendary Bash", imagen: "img/especiales/Legendary Bash.png" },
-      { nombre: "Legendary Chop Chop", imagen: "img/especiales/Legendary Chop Chop.png" },
-      { nombre: "Legendary Trigger Happy", imagen: "img/especiales/Legendary Trigger Happy.png" }
-    ]
-  }
-];
 
-const TOTAL_SKYLANDERS = grupos.reduce((acc, g) => acc + g.items.length, 0);
-let adivinados = [];
+const ELEMENTOS_ICONO = {
+  agua: "img/elementos/agua.png",
+  aire: "img/elementos/aire.png",
+  fuego: "img/elementos/fuego.png",
+  magia: "img/elementos/magia.png",
+  muertos: "img/elementos/muertos.png",
+  tecnologia: "img/elementos/tecnologia.png",
+  tierra: "img/elementos/tierra.png",
+  vida: "img/elementos/vida.png",
+  luz: "img/elementos/luz.png",
+  oscuridad: "img/elementos/oscuridad.png",
+  kaos: "img/elementos/kaos.png"
+};
+
+function normalizar(str) {
+  return (str || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+}
+
+function colorElemento(nombre) {
+  return ELEMENTOS_COLOR[normalizar(nombre)] || "var(--gold)";
+}
+
+function iconoElemento(nombre) {
+  return ELEMENTOS_ICONO[normalizar(nombre)] || "img/portal.jpg";
+}
+
+// Texto exacto que hay que escribir para adivinar el personaje.
+// Si tiene serie 2, hay que escribir "series X nombre" (ej: "series 2 spyro").
+function claveBusqueda(item) {
+  const nombreLower = item.nombre.toLowerCase();
+  if (item.serie && item.serie > 1 && item.serie < 3) {
+    return `series ${item.serie} ${nombreLower}`;
+  }
+  return nombreLower;
+}
+
+/* ---------- Carga de datos desde Supabase ---------- */
+
+async function cargarDatosSupabase() {
+  const url =
+    `${SUPABASE_URL}/rest/v1/personaje` +
+    `?select=id,nombre,edicion,serie,saga(id,nombre),elemento(id,nombre)` +
+    `&order=nombre.asc`;
+
+  const respuesta = await fetch(url, {
+    headers: {
+      apikey: SUPABASE_KEY,
+      Authorization: `Bearer ${SUPABASE_KEY}`
+    }
+  });
+
+  if (!respuesta.ok) {
+    throw new Error(`Error ${respuesta.status} al consultar Supabase`);
+  }
+
+  const personajes = await respuesta.json();
+
+  // Filtramos ediciones especiales y personajes sin saga asignada
+  const validos = personajes.filter((p) => !esEdicionEspecial(p) && p.saga);
+
+  const sagasMap = new Map();
+
+  validos.forEach((p) => {
+    const sagaId = p.saga.id;
+    if (!sagasMap.has(sagaId)) {
+      sagasMap.set(sagaId, {
+        id: sagaId,
+        nombre: p.saga.nombre,
+        items: [],
+        elementosMap: new Map()
+      });
+    }
+    const sagaObj = sagasMap.get(sagaId);
+
+    const item = {
+      id: p.id,
+      nombre: p.nombre,
+      imagen: `img/${p.saga.nombre}/${p.id}.png`,
+      serie: p.serie,
+      elementoNombre: p.elemento ? p.elemento.nombre : "Otros"
+    };
+
+    sagaObj.items.push(item);
+
+    const elKey = p.elemento ? p.elemento.id : "sin-elemento";
+    if (!sagaObj.elementosMap.has(elKey)) {
+      sagaObj.elementosMap.set(elKey, {
+        id: elKey,
+        nombre: item.elementoNombre,
+        items: []
+      });
+    }
+    sagaObj.elementosMap.get(elKey).items.push(item);
+  });
+
+  grupos = Array.from(sagasMap.values())
+    .sort((a, b) => a.id - b.id)
+    .map((saga) => ({
+      id: saga.id,
+      nombre: saga.nombre,
+      items: saga.items,
+      elementos: Array.from(saga.elementosMap.values()).sort((a, b) =>
+        a.nombre.localeCompare(b.nombre)
+      )
+    }));
+
+  TOTAL_SKYLANDERS = grupos.reduce((acc, g) => acc + g.items.length, 0);
+}
+
+/* ---------- Render ---------- */
+
+function crearCasilla(item) {
+  const casilla = document.createElement("div");
+  casilla.classList.add("casilla-icono");
+
+  const revelado = adivinados.has(item.id);
+
+  casilla.title = revelado ? item.nombre : "???";
+
+  const img = document.createElement("img");
+  if (revelado) {
+    casilla.classList.add("revelada");
+    img.src = item.imagen;
+    img.alt = item.nombre;
+  } else {
+    casilla.classList.add("oculta");
+    img.src = iconoElemento(item.elementoNombre);
+    img.alt = item.elementoNombre;
+  }
+  casilla.appendChild(img);
+
+  return casilla;
+}
 
 function cargarGrupos() {
   const contenedor = document.getElementById("contenedorGrupos");
@@ -255,37 +192,39 @@ function cargarGrupos() {
   grupos.forEach((grupo) => {
     const grupoDiv = document.createElement("div");
     grupoDiv.classList.add("grupo");
-    grupoDiv.dataset.elemento = grupo.elemento;
+    grupoDiv.dataset.saga = grupo.id;
 
     const titulo = document.createElement("h2");
     titulo.classList.add("grupo-titulo");
     titulo.textContent = grupo.nombre;
     grupoDiv.appendChild(titulo);
 
-    const itemsDiv = document.createElement("div");
-    if (grupo.elemento === "Ediciones") {
-      itemsDiv.classList.add("grupo-items-especial");
-    }else{
-      itemsDiv.classList.add("grupo-items");
-    }
+    const sagaElementos = document.createElement("div");
+    sagaElementos.classList.add("saga-elementos");
 
-    grupo.items.forEach((item) => {
-      const casilla = document.createElement("div");
-      casilla.classList.add("casilla");
-      casilla.title = adivinados.includes(item.nombre) ? item.nombre : "???";
+    grupo.elementos.forEach((elemento) => {
+      const elementoDiv = document.createElement("div");
+      elementoDiv.classList.add("elemento-grupo");
+      elementoDiv.dataset.elemento = elemento.id;
+      elementoDiv.style.setProperty("--c-elemento", colorElemento(elemento.nombre));
 
-      const img = document.createElement("img");
-      if (adivinados.includes(item.nombre)) {
-        img.src = item.imagen;
-        casilla.classList.add("revelada");
-      } else {
-        img.src = grupo.portada;
-      }
-      casilla.appendChild(img);
-      itemsDiv.appendChild(casilla);
+      const elTitulo = document.createElement("h3");
+      elTitulo.classList.add("elemento-titulo");
+      elTitulo.textContent = elemento.nombre;
+      elementoDiv.appendChild(elTitulo);
+
+      const elItems = document.createElement("div");
+      elItems.classList.add("elemento-items");
+
+      elemento.items.forEach((item) => {
+        elItems.appendChild(crearCasilla(item));
+      });
+
+      elementoDiv.appendChild(elItems);
+      sagaElementos.appendChild(elementoDiv);
     });
 
-    grupoDiv.appendChild(itemsDiv);
+    grupoDiv.appendChild(sagaElementos);
     contenedor.appendChild(grupoDiv);
   });
 
@@ -293,18 +232,20 @@ function cargarGrupos() {
 }
 
 function actualizarProgreso() {
-  document.getElementById("contador").textContent = `${adivinados.length} / ${TOTAL_SKYLANDERS}`;
-  const porcentaje = (adivinados.length / TOTAL_SKYLANDERS) * 100;
+  document.getElementById("contador").textContent = `${adivinados.size} / ${TOTAL_SKYLANDERS}`;
+  const porcentaje = TOTAL_SKYLANDERS ? (adivinados.size / TOTAL_SKYLANDERS) * 100 : 0;
   document.getElementById("progresoRelleno").style.width = `${porcentaje}%`;
 }
+
+/* ---------- Búsqueda ---------- */
 
 function existePrefijoValido(input) {
   if (!input) return true;
   return grupos.some((grupo) =>
     grupo.items.some(
       (item) =>
-        !adivinados.includes(item.nombre) &&
-        item.nombre.toLowerCase().startsWith(input)
+        !adivinados.has(item.id) &&
+        claveBusqueda(item).startsWith(input)
     )
   );
 }
@@ -316,8 +257,8 @@ function buscar() {
 
   grupos.forEach((grupo) => {
     grupo.items.forEach((item) => {
-      if (input === item.nombre.toLowerCase() && !adivinados.includes(item.nombre)) {
-        adivinados.push(item.nombre);
+      if (input === claveBusqueda(item) && !adivinados.has(item.id)) {
+        adivinados.add(item.id);
         acierto = true;
       }
     });
@@ -335,7 +276,7 @@ function buscar() {
     setTimeout(() => inputField.classList.remove("error"), 350);
   }
 
-  if (adivinados.length === TOTAL_SKYLANDERS) {
+  if (adivinados.size === TOTAL_SKYLANDERS && TOTAL_SKYLANDERS > 0) {
     setTimeout(() => {
       Swal.fire({
         title: "¡Portal completado!",
@@ -349,6 +290,8 @@ function buscar() {
     }, 250);
   }
 }
+
+/* ---------- Reinicio ---------- */
 
 function reiniciar() {
   Swal.fire({
@@ -364,17 +307,47 @@ function reiniciar() {
     color: "#f1f3fb"
   }).then((resultado) => {
     if (resultado.isConfirmed) {
-      adivinados = [];
+      adivinados = new Set();
       cargarGrupos();
       document.getElementById("buscador").focus();
     }
   });
 }
 
-window.onload = function () {
-  cargarGrupos();
-  
+/* ---------- Arranque ---------- */
+
+window.onload = async function () {
   const buscador = document.getElementById("buscador");
+  buscador.disabled = true;
+
+  Swal.fire({
+    title: "Cargando portal...",
+    allowOutsideClick: false,
+    showConfirmButton: false,
+    background: "#10182b",
+    color: "#f1f3fb",
+    didOpen: () => Swal.showLoading()
+  });
+
+  try {
+    await cargarDatosSupabase();
+    cargarGrupos();
+    Swal.close();
+  } catch (error) {
+    console.error(error);
+    Swal.fire({
+      title: "Error al cargar",
+      text: "No se pudo conectar con la base de datos de Skylanders.",
+      icon: "error",
+      confirmButtonText: "Reintentar",
+      confirmButtonColor: "#ff5a36",
+      background: "#10182b",
+      color: "#f1f3fb"
+    }).then(() => window.location.reload());
+    return;
+  }
+
+  buscador.disabled = false;
   buscador.addEventListener("input", buscar);
   buscador.focus();
 

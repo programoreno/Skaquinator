@@ -48,17 +48,17 @@ const ELEMENTOS_COLOR = {
 };
 
 const ELEMENTOS_ICONO = {
-  agua: "img/elementos/agua.png",
-  aire: "img/elementos/aire.png",
-  fuego: "img/elementos/fuego.png",
-  magia: "img/elementos/magia.png",
-  muertos: "img/elementos/muertos.png",
-  tecnologia: "img/elementos/tecnologia.png",
-  tierra: "img/elementos/tierra.png",
-  vida: "img/elementos/vida.png",
-  luz: "img/elementos/luz.png",
-  oscuridad: "img/elementos/oscuridad.png",
-  kaos: "img/elementos/kaos.png"
+  agua: "img/elementos/Agua.png",
+  aire: "img/elementos/Aire.png",
+  fuego: "img/elementos/Fuego.png",
+  magia: "img/elementos/Magia.png",
+  muertos: "img/elementos/Muertos.png",
+  tecnologia: "img/elementos/Tecnologia.png",
+  tierra: "img/elementos/Tierra.png",
+  vida: "img/elementos/Vida.png",
+  luz: "img/elementos/Luz.png",
+  oscuridad: "img/elementos/Oscuridad.png",
+  kaos: "img/elementos/Kaos.png"
 };
 
 function normalizar(str) {

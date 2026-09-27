@@ -63,28 +63,6 @@ body {
     z-index: 10;
 }
 
-/* Portal glow ambiental */
-.portal-glow {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 140vw;
-    height: 140vw;
-    max-width: 1400px;
-    max-height: 1400px;
-    transform: translate(-50%, -50%);
-    background: radial-gradient(circle, rgba(217, 178, 76, 0.10) 0%, rgba(180, 92, 255, 0.06) 35%, transparent 70%);
-    filter: blur(10px);
-    z-index: 0;
-    pointer-events: none;
-    animation: respirar 8s ease-in-out infinite;
-}
-
-@keyframes respirar {
-    0%, 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
-    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.06); }
-}
-
 /* Cabecera */
 .cabecera {
     position: relative;

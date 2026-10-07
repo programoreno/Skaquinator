@@ -4,6 +4,10 @@
     font-weight: normal;
     font-style: normal;
 }
+/* Para el scroll smooht*/
+html {
+  scroll-behavior: smooth;
+}
 
 :root {
     --bg-1: #070a12;
@@ -511,4 +515,28 @@ body {
         animation-iteration-count: 1 !important;
         transition-duration: 0.001ms !important;
     }
+}
+
+/*BOTON DE IR ARRIBA */
+.go-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  z-index: 1000;
+  background: rgba(10, 14, 26, 0.7);
+  border: 1px solid var(--panel-border);
+  color: var(--gold-soft);
+  transition: all 0.25s ease;
+}
+.go-top:hover{
+  color: #fff;
+    border-color: var(--gold);
+    background: rgba(217, 178, 76, 0.2);
+    box-shadow: 0 0 12px rgba(217, 178, 76, 0.3);
 }

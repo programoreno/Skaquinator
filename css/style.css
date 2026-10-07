@@ -86,14 +86,7 @@ body {
     letter-spacing: 0.08em;
     color: #fff;
     text-shadow: 0 0 40px rgba(217, 178, 76, 0.35);
-}
-
-.subtitulo {
-    margin: 12px 0 30px;
-    max-width: 480px;
-    color: var(--muted);
-    font-size: 15px;
-    line-height: 1.5;
+     margin: 12px 0 30px;
 }
 
 /* Buscador y Botón Reiniciar */

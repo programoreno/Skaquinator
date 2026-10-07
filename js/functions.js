@@ -353,3 +353,8 @@ window.onload = async function () {
 
   document.getElementById("btnReiniciar").addEventListener("click", reiniciar);
 };
+/* PARA EVITAR LA RUTA TOP AL DARLE AL BOTON DE SUBIR */
+document.querySelector('.test').addEventListener('click', (e) => {
+  e.preventDefault();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});

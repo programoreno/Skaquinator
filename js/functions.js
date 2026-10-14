@@ -81,7 +81,7 @@ function iconoElemento(nombre) {
 // Si tiene serie 2, hay que escribir "series X nombre" (ej: "series 2 spyro").
 function claveBusqueda(item) {
   const nombreLower = item.nombre.toLowerCase();
-  if (item.serie && item.serie > 1 && item.serie < 3 && item.saga == 2 ) {
+  if (item.serie === 2 && item.saga === 2 ) {
     return `series ${item.serie} ${nombreLower}`;
   }
   return nombreLower;

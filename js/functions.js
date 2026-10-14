@@ -81,8 +81,8 @@ function iconoElemento(nombre) {
 // Si tiene serie 2, hay que escribir "series X nombre" (ej: "series 2 spyro").
 function claveBusqueda(item) {
   const nombreLower = item.nombre.toLowerCase();
-  if (item.serie === 2 && item.saga === 2 ) {
-    return `series ${item.serie} ${nombreLower}`;
+  if (item.serie === 2 && item.saga === 2) {
+    return `series 2 ${nombreLower}`;
   }
   return nombreLower;
 }
@@ -130,7 +130,7 @@ async function cargarDatosSupabase() {
       nombre: p.nombre,
       imagen: `img/${p.saga.nombre}/${p.id}.png`,
       serie: p.serie,
-      saga: p.saga,
+      saga: Number(p.saga.id), 
       elementoNombre: p.elemento ? p.elemento.nombre : "Otros"
     };
 

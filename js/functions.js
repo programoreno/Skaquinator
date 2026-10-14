@@ -130,6 +130,7 @@ async function cargarDatosSupabase() {
       nombre: p.nombre,
       imagen: `img/${p.saga.nombre}/${p.id}.png`,
       serie: p.serie,
+      saga: p.saga,
       elementoNombre: p.elemento ? p.elemento.nombre : "Otros"
     };
 
